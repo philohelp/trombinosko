@@ -9,10 +9,6 @@ export function buildDataArrayFromImageUrls(imageUrls) {
       return;
     }
     const student = extractStudentObjectFromUrl(url);
-    if (student.firstname == "" || student.lastname == "") {
-      mistakes.push(url);
-      return;
-    }
     const newStudent = {
       firstname: student.firstname,
       lastname: student.lastname,

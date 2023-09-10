@@ -13,7 +13,7 @@ import {
 import logo from "/icon128.png";
 
 import fakes from "./fakes.json";
-import fakeUrls from "./fakeUrls.json";
+import fakeUrls from "./fakeCelebritiesUrls.json";
 
 const buttonClassName =
   "bg-sky-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out shadow hover:shadow-lg";
@@ -54,6 +54,7 @@ function App({ dataArray }) {
     setCurrentList(genderedList);
     setMistakesList([]);
     setCount(0);
+    setStatus("wait");
   };
   const replayMistakes = () => {
     setCurrentList(mistakesList);
@@ -72,6 +73,15 @@ function App({ dataArray }) {
   const seeNext = () => {
     if (status === "fail") {
       setMistakesList([...mistakesList, currentList[count]]);
+    }
+    if (count + 1 === currentList.length) {
+      setCount(count + 1);
+      if (mistakesList.length === 0) {
+        setStatus("finalWithoutMistakes");
+      } else {
+        setStatus("finalWithMistakes");
+      }
+      return;
     }
     setStatus("wait");
     setCount(count + 1);
@@ -181,7 +191,7 @@ function App({ dataArray }) {
                 className={`w-full ${buttonClassName}`}
                 onClick={() => seeNext()}
               >
-                Voir le suivant
+                Continuer
               </button>
               <p className="mt-8 text-sm font-light text-center">
                 {currentList.length - count - 1} élèves restants sur{" "}
@@ -241,7 +251,7 @@ function AppWithData() {
       setTimeout(() => {
         setImageUrls(fakeUrls);
         setLoading(false);
-      }, 10000);
+      }, 3000);
     }
   }, []);
   if (loading) {

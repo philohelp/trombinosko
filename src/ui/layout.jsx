@@ -21,6 +21,10 @@ function getTitleForStatus(status) {
       return "Oui !";
     case "fail":
       return "Non :(";
+    case "finalWithMistakes":
+      return "Fin de la partie !";
+    case "finalWithoutMistakes":
+      return "Félicitations";
     default:
       return "Qui suis-je ?";
   }
