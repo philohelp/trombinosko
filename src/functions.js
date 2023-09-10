@@ -1,5 +1,57 @@
 import names from "./names.json";
 
+export function buildDataArrayFromImageUrls(imageUrls) {
+  let students = [];
+  let mistakes = [];
+  imageUrls.forEach((url) => {
+    if (url == "") {
+      mistakes.push(url);
+      return;
+    }
+    const student = extractStudentObjectFromUrl(url);
+    if (student.firstname == "" || student.lastname == "") {
+      mistakes.push(url);
+      return;
+    }
+    const newStudent = {
+      firstname: student.firstname,
+      lastname: student.lastname,
+      url: url,
+    };
+    console.log("newStudent", newStudent);
+    students.push(newStudent);
+  });
+  return { students, mistakes };
+}
+
+function extractStudentObjectFromUrl(url) {
+  let firstname = "";
+  let lastname = "";
+  const mainPart = url.split("?")[0];
+  const lastSlash = mainPart.lastIndexOf("/");
+  const nameEncoded = decodeURIComponent(
+    mainPart.substring(lastSlash + 1).replace(".jpg", "")
+  );
+  // Trouver la première occurrence d'une lettre minuscule ou d'un caractère accentué
+  const firstLowercaseIndex = nameEncoded.search(/[a-zà-ÿ]/);
+  // Extraire le nom et le prénom basé sur cette index
+  try {
+    lastname = nameEncoded
+      .substring(0, firstLowercaseIndex - 1)
+      .replaceAll("_", " ");
+  } catch (error) {
+    console.log("error", error);
+  }
+  try {
+    firstname = nameEncoded
+      .substring(firstLowercaseIndex - 1)
+      .replaceAll("_", " ");
+  } catch (error) {
+    console.log("error", error);
+  }
+  return { firstname, lastname };
+}
+
 export function buildListOfStudentsWithGender(originalList) {
   let finalList = [];
   originalList.forEach((student) => {
@@ -68,13 +120,6 @@ export function extractNames() {
     finalNames.push(newName);
   });
   return finalNames;
-}
-
-function buildAMysteryCard(students) {
-  const totalNumberOfStudents = students.length;
-  const randomIndex = Math.floor(Math.random() * totalNumberOfStudents);
-  const randomStudent = students[randomIndex];
-  return card;
 }
 
 export function shuffleArray(arr) {
