@@ -1,7 +1,10 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 
+import FinalScreen from "./screens/final_screen";
+import GameScreen from "./screens/game_screen";
 import Layout from "./ui/layout";
+import Message from "./ui/message";
 
 import {
   buildListOfStudentsWithGender,
@@ -10,59 +13,31 @@ import {
   buildDataArrayFromImageUrls,
 } from "./functions";
 
-import logo from "/icon128.png";
-
-import fakes from "./fakes.json";
 import fakeUrls from "./fakeCelebritiesUrls.json";
-
-const buttonClassName =
-  "bg-sky-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out shadow hover:shadow-lg";
-
-function getBgForStatus(status) {
-  switch (status) {
-    case "success":
-      return "bg-green-500";
-    case "fail":
-      return "bg-red-400";
-    default:
-      return "bg-indigo-400";
-  }
-}
-
-function getTitleForStatus(status) {
-  switch (status) {
-    case "success":
-      return "Oui !";
-    case "fail":
-      return "Non :(";
-    default:
-      return "Qui suis-je ?";
-  }
-}
 
 function App({ dataArray }) {
   const genderedList = buildListOfStudentsWithGender(dataArray);
   useEffect(() => {
-    console.log("genderedList", genderedList);
     setCurrentList(genderedList);
-  }, [fakes]);
+  }, [dataArray]);
   const [currentList, setCurrentList] = useState([]);
   const [mistakesList, setMistakesList] = useState([]);
   const [count, setCount] = useState(0);
-  const [status, setStatus] = useState("wait");
+  const [status, setStatus] = useState("guess");
   const reset = () => {
     setCurrentList(genderedList);
     setMistakesList([]);
     setCount(0);
-    setStatus("wait");
+    setStatus("guess");
   };
   const replayMistakes = () => {
     setCurrentList(mistakesList);
     setMistakesList([]);
     setCount(0);
+    setStatus("guess");
   };
   const twoRandoms = findTwoRandomStudents(currentList[count], genderedList);
-  const threeProposals = shuffleArray(twoRandoms.concat(currentList[count]));
+  const threeChoices = shuffleArray(twoRandoms.concat(currentList[count]));
   const checkAnswer = (student) => {
     if (student.url === currentList[count].url) {
       setStatus("success");
@@ -70,7 +45,7 @@ function App({ dataArray }) {
       setStatus("fail");
     }
   };
-  const seeNext = () => {
+  const goOn = () => {
     if (status === "fail") {
       setMistakesList([...mistakesList, currentList[count]]);
     }
@@ -83,125 +58,27 @@ function App({ dataArray }) {
       }
       return;
     }
-    setStatus("wait");
+    setStatus("guess");
     setCount(count + 1);
   };
   if (count === currentList.length) {
     return (
-      <div className="content flex justify-center">
-        <div
-          className={`${getBgForStatus(status)} p-8 w-80 h-[600px] relative`}
-        >
-          <div className="w-full flex justify-center">
-            <img src={logo} alt="Mystery student" />
-          </div>
-          <p className="mt-8 text-white font-extralight text-4xl uppercase text-center">
-            {mistakesList.length === 0 ? "FÉLICITATIONS" : "FIN DE LA PARTIE !"}
-          </p>
-          <div className="mt-6 text-center">
-            {mistakesList.length === 0 ? (
-              <div>
-                <p>Vous avez reconnu</p>
-                <p>tous les élèves !</p>
-              </div>
-            ) : (
-              <div>
-                <p>
-                  Vous avez fait{" "}
-                  <span className="font-bold">{mistakesList.length} </span>
-                  erreurs
-                </p>
-                <p>
-                  Vous pouvez améliorer votre score en rejouant uniquement les
-                  erreurs.
-                </p>
-              </div>
-            )}
-          </div>
-          <div className="absolute bottom-0 left-0 w-full px-8 pb-8">
-            {mistakesList.length !== 0 && (
-              <button
-                className={`w-full ${buttonClassName}`}
-                onClick={() => replayMistakes()}
-              >
-                Reprendre les erreurs
-              </button>
-            )}
-            <button
-              className={`mt-4 w-full ${buttonClassName}`}
-              onClick={() => reset()}
-            >
-              Relancer le jeu
-            </button>
-          </div>
-        </div>
-      </div>
+      <FinalScreen
+        numberOfMistakes={mistakesList.length}
+        reset={reset}
+        replayMistakes={replayMistakes}
+      />
     );
   }
   return (
-    <div className="content flex justify-center">
-      <div className={`${getBgForStatus(status)} p-8 w-80 h-[600px] relative`}>
-        <div className="w-full flex justify-center">
-          <img
-            src={currentList[count] ? currentList[count].url : logo}
-            alt="Mystery student"
-          />
-        </div>
-        <p className="mt-6 text-white font-extralight text-4xl uppercase text-center">
-          {getTitleForStatus(status)}
-        </p>
-        <div className="text-center mt-4">
-          {status === "success" && (
-            <div className="mt-2">
-              <p>
-                Je suis bien{" "}
-                <span className="font-bold">
-                  {currentList[count].firstname} {currentList[count].lastname}
-                </span>
-              </p>
-            </div>
-          )}
-          {status === "fail" && (
-            <div className="mt-2">
-              <p>
-                Je suis{" "}
-                <span className="font-bold">
-                  {currentList[count].firstname} {currentList[count].lastname}
-                </span>
-              </p>
-            </div>
-          )}
-          {status === "wait" &&
-            threeProposals.map((student) => (
-              <button
-                key={student?.url}
-                className={`mt-3 w-full ${buttonClassName}`}
-                onClick={() => checkAnswer(student)}
-              >
-                <p className="text-sm">
-                  {student?.firstname} {student?.lastname}
-                </p>
-              </button>
-            ))}
-        </div>
-        <div className="absolute bottom-0 left-0 w-full px-8 pb-8">
-          {status !== "wait" && (
-            <div className="mt-8">
-              <button
-                className={`w-full ${buttonClassName}`}
-                onClick={() => seeNext()}
-              >
-                Continuer
-              </button>
-              <p className="mt-8 text-sm font-light text-center">
-                {currentList.length - count - 1} élèves restants sur{" "}
-                {currentList.length}
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+    <GameScreen
+      status={status}
+      currentList={currentList}
+      count={count}
+      checkAnswer={checkAnswer}
+      goOn={goOn}
+      threeChoices={threeChoices}
+    />
   );
 }
 
@@ -219,9 +96,7 @@ function CheckDataArray({ imageUrls }) {
   if (!greenLight) {
     return (
       <Layout status="check">
-        <p className="text-white text-center text-sm opacity-70 mt-8">
-          Vérification des images...
-        </p>
+        <Message text="Vérification des images..." />
       </Layout>
     );
   }
@@ -257,9 +132,7 @@ function AppWithData() {
   if (loading) {
     return (
       <Layout status="welcome">
-        <p className="text-white text-center text-sm opacity-70 mt-8">
-          Merci de patienter pendant le chargement des images...
-        </p>
+        <Message text="Merci de patienter pendant le chargement des images..." />
       </Layout>
     );
   }

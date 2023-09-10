@@ -30,7 +30,7 @@ function getTitleForStatus(status) {
   }
 }
 
-export default function Layout({ children, status = "wait", image = logo }) {
+export default function Layout({ children, status = "guess", image = logo }) {
   return (
     <div className="content flex justify-center">
       <div className={`${getBgForStatus(status)} p-8 w-80 h-[600px] relative`}>
