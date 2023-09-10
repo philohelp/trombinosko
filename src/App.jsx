@@ -56,12 +56,6 @@ function App() {
   const twoRandoms = findTwoRandomStudents(currentList[count], genderedList);
   const threeProposals = shuffleArray(twoRandoms.concat(currentList[count]));
   const checkAnswer = (student) => {
-    console.log(
-      "given answer:",
-      student,
-      "right answer:",
-      currentList[count].firstname
-    );
     if (student.url === currentList[count].url) {
       setStatus("success");
     } else {
@@ -69,7 +63,6 @@ function App() {
     }
   };
   const seeNext = () => {
-    // setCurrentList(removeItemFromList(currentList, currentList[count]));
     if (status === "error") {
       setMistakesList([...mistakesList, currentList[count]]);
     }
@@ -80,18 +73,18 @@ function App() {
     return (
       <div className="content flex justify-center">
         <div
-          className={`${getBgForStatus(status)} p-8 w-80 h-[700px] relative`}
+          className={`${getBgForStatus(status)} p-8 w-80 h-[600px] relative`}
         >
           <div className="w-full flex justify-center">
             <img src={logo} alt="Mystery student" />
           </div>
           <p className="mt-8 text-white font-extralight text-4xl uppercase text-center">
-            FÉLICITATIONS
+            {mistakesList.length === 0 ? "FÉLICITATIONS" : "FIN DE LA PARTIE !"}
           </p>
-          <div className="mt-4 text-center">
+          <div className="mt-6 text-center">
             {mistakesList.length === 0 ? (
               <div>
-                <p className="mt-2">Vous avez reconnu</p>
+                <p>Vous avez reconnu</p>
                 <p>tous les élèves !</p>
               </div>
             ) : (
@@ -130,7 +123,7 @@ function App() {
   }
   return (
     <div className="content flex justify-center">
-      <div className={`${getBgForStatus(status)} p-8 w-80 h-[700px] relative`}>
+      <div className={`${getBgForStatus(status)} p-8 w-80 h-[600px] relative`}>
         <div className="w-full flex justify-center">
           <img
             src={currentList[count] ? currentList[count].url : logo}
@@ -168,7 +161,7 @@ function App() {
                 className={`mt-3 w-full ${buttonClassName}`}
                 onClick={() => checkAnswer(student)}
               >
-                <p className="">
+                <p className="text-sm">
                   {student?.firstname} {student?.lastname}
                 </p>
               </button>
