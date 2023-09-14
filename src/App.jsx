@@ -17,15 +17,16 @@ import fakeUrls from "./fakeCelebritiesUrls.json";
 
 function App({ dataArray }) {
   const genderedList = buildListOfStudentsWithGender(dataArray);
+  const shuffledList = shuffleArray(genderedList);
   useEffect(() => {
-    setCurrentList(genderedList);
+    setCurrentList(shuffledList);
   }, [dataArray]);
   const [currentList, setCurrentList] = useState([]);
   const [mistakesList, setMistakesList] = useState([]);
   const [count, setCount] = useState(0);
   const [status, setStatus] = useState("guess");
   const reset = () => {
-    setCurrentList(genderedList);
+    setCurrentList(shuffledList);
     setMistakesList([]);
     setCount(0);
     setStatus("guess");

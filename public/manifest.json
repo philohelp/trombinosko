@@ -1,7 +1,7 @@
 {
   "name": "Trombinosko",
   "version": "1.0.0",
-  "description": "Apprenez à reconnaître vos élèves à l'aide de cette petite appli simple et ludique, à lancer depuis le trombinoscope de Pronote.",
+  "description": "Une petite appli simple et ludique, à lancer depuis le trombinoscope de Pronote, pour apprendre à reconnaître facilement ses élèves.",
   "manifest_version": 3,
   "author": "Thomas Poirier",
   "permissions": ["activeTab"],
