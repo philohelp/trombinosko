@@ -14,7 +14,6 @@ export function buildDataArrayFromImageUrls(imageUrls) {
       lastname: student.lastname,
       url: url,
     };
-    console.log("newStudent", newStudent);
     students.push(newStudent);
   });
   return { students, mistakes };
