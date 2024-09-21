@@ -40,7 +40,9 @@ function App({ dataArray }) {
   const twoRandoms = findTwoRandomStudents(currentList[count], genderedList);
   const threeChoices = shuffleArray(twoRandoms.concat(currentList[count]));
   const checkAnswer = (student) => {
-    if (student.url === currentList[count].url) {
+    if (student.notAPic) {
+      setStatus("success");
+    } else if (student.url === currentList[count].url) {
       setStatus("success");
     } else {
       setStatus("fail");

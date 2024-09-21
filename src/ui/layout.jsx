@@ -18,7 +18,7 @@ function getTitleForStatus(status) {
     case "check":
       return "Bienvenue !";
     case "success":
-      return "Oui !";
+      return "Oui";
     case "fail":
       return "Non :(";
     case "finalWithMistakes":
@@ -32,12 +32,12 @@ function getTitleForStatus(status) {
 
 export default function Layout({ children, status = "guess", image = logo }) {
   return (
-    <div className="content flex justify-center">
+    <div className="flex justify-center content">
       <div className={`${getBgForStatus(status)} p-8 w-80 h-[600px] relative`}>
-        <div className="w-full flex justify-center">
+        <div className="flex justify-center w-full">
           <img src={image} alt="Mystery student" />
         </div>
-        <p className="mt-6 text-white font-extralight text-4xl uppercase text-center">
+        <p className="mt-6 text-4xl text-center text-white uppercase font-extralight">
           {getTitleForStatus(status)}
         </p>
         <div>{children}</div>
